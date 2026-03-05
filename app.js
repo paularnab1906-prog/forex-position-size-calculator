@@ -97,6 +97,7 @@ const riskInput = document.getElementById('riskPercent');
 const entryInput = document.getElementById('entryPrice');
 const slInput = document.getElementById('slPrice');
 const tpInput = document.getElementById('tpPrice');
+const spreadInput = document.getElementById('spread');
 const resetBtn = document.getElementById('resetBtn');
 const copyBtn = document.getElementById('copyBtn');
 const resultsSection = document.getElementById('results');
@@ -114,6 +115,7 @@ const sumTP = document.getElementById('sumTP');
 const sumLot = document.getElementById('sumLot');
 const sumRisk = document.getElementById('sumRisk');
 const sumProfit = document.getElementById('sumProfit');
+const sumSpread = document.getElementById('sumSpread');
 
 // ══════════════════════════════════════════════════════
 //  SEARCHABLE PAIR SELECTOR
@@ -224,17 +226,21 @@ form.addEventListener('submit', (e) => {
   const entry = parseFloat(entryInput.value);
   const sl = parseFloat(slInput.value);
   const tp = parseFloat(tpInput.value);
+  const spread = parseFloat(spreadInput.value) || 0;
 
   if ([balance, riskPct, entry, sl, tp].some(v => isNaN(v) || v <= 0)) return;
+  if (spread < 0) return;
   if (entry === sl) return;
 
   const pipMult = getPipMultiplier(selectedPair.type);
   const pipValue = selectedPair.pipValue;
   const pairName = selectedPair.name;
 
-  // Pip distances
-  const slPips = Math.abs(entry - sl) * pipMult;
-  const tpPips = Math.abs(tp - entry) * pipMult;
+  // Pip distances (spread adds to effective SL, reduces net TP)
+  const slPipsRaw = Math.abs(entry - sl) * pipMult;
+  const tpPipsRaw = Math.abs(tp - entry) * pipMult;
+  const slPips = slPipsRaw + spread;
+  const tpPips = Math.max(0, tpPipsRaw - spread);
   const rrRatio = slPips > 0 ? tpPips / slPips : 0;
 
   // Financials
@@ -242,7 +248,7 @@ form.addEventListener('submit', (e) => {
   const lotSize = riskAmount / (slPips * pipValue);
   const profit = riskAmount * rrRatio;
 
-  lastResult = { pairName, entry, sl, tp, slPips, tpPips, rrRatio, riskAmount, lotSize, profit };
+  lastResult = { pairName, entry, sl, tp, spread, slPips, tpPips, rrRatio, riskAmount, lotSize, profit };
 
   // Animate results
   animateValue(slPipEl, `${slPips.toFixed(1)} pips`);
@@ -257,6 +263,7 @@ form.addEventListener('submit', (e) => {
   sumEntry.textContent = entryInput.value;
   sumSL.textContent = slInput.value;
   sumTP.textContent = tpInput.value;
+  sumSpread.textContent = spread.toFixed(1) + ' pips';
   sumLot.textContent = lotSize.toFixed(2);
   sumRisk.textContent = usd.format(riskAmount);
   sumProfit.textContent = usd.format(profit);
@@ -297,7 +304,8 @@ copyBtn.addEventListener('click', () => {
     `Entry:           ${r.entry}`,
     `Stop Loss:       ${r.sl}`,
     `Take Profit:     ${r.tp}`,
-    `SL Distance:     ${r.slPips.toFixed(1)} pips`,
+    `Spread:          ${r.spread.toFixed(1)} pips`,
+    `SL Distance:     ${r.slPips.toFixed(1)} pips (incl. spread)`,
     `TP Distance:     ${r.tpPips.toFixed(1)} pips`,
     `Risk : Reward:   1:${r.rrRatio.toFixed(1)}`,
     `━━━━━━━━━━━━━━━━━━━━━━`,
