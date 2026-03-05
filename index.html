@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Forex Position Size Calculator | Risk Management Tool</title>
+    <meta name="description"
+        content="Free forex position size calculator. Calculate lot size, pip distance, risk amount and potential profit. Used by traders to manage risk." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css?v=7" />
+</head>
+
+<body>
+    <div class="app">
+        <div class="glow glow-1"></div>
+        <div class="glow glow-2"></div>
+
+        <header class="header">
+            <div class="logo">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline>
+                    <polyline points="16 7 22 7 22 13"></polyline>
+                </svg>
+                <h1>Free Forex Position Size Calculator</h1>
+            </div>
+            <p class="subtitle">Used by traders to manage risk and calculate lot size</p>
+        </header>
+
+        <main class="card">
+            <form id="calcForm" autocomplete="off">
+
+                <!-- Searchable Pair Selector -->
+                <div class="input-group input-group-full">
+                    <label>Currency Pair</label>
+                    <div class="pair-search" id="pairSearch">
+                        <div class="input-wrapper pair-input-wrapper">
+                            <span class="pair-badge" id="pairBadge">EUR/USD</span>
+                            <input type="text" id="pairInput" placeholder="Search pair..." autocomplete="off"
+                                spellcheck="false" />
+                            <svg class="pair-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="6 9 12 15 18 9"></polyline>
+                            </svg>
+                        </div>
+                        <div class="pair-dropdown" id="pairDropdown"></div>
+                    </div>
+                </div>
+
+                <div class="input-grid">
+                    <div class="input-group">
+                        <label for="balance">Account Balance</label>
+                        <div class="input-wrapper">
+                            <span class="input-prefix">$</span>
+                            <input type="number" id="balance" placeholder="10,000" min="0" step="any" required />
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="riskPercent">Risk Percentage</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="riskPercent" placeholder="1" min="0" max="100" step="any"
+                                required />
+                            <span class="input-suffix">%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section-label">Trade Prices</div>
+
+                <div class="input-grid input-grid-3">
+                    <div class="input-group">
+                        <label for="entryPrice">Entry Price</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="entryPrice" placeholder="1.10500" min="0" step="any" required />
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="slPrice">Stop Loss</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="slPrice" placeholder="1.10000" min="0" step="any" required />
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="tpPrice">Take Profit</label>
+                        <div class="input-wrapper">
+                            <input type="number" id="tpPrice" placeholder="1.11500" min="0" step="any" required />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="btn-row">
+                    <button type="submit" id="calculateBtn" class="btn-calculate">
+                        <span>Calculate</span>
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </button>
+                    <button type="button" id="resetBtn" class="btn-reset">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="1 4 1 10 7 10"></polyline>
+                            <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"></path>
+                        </svg>
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- Results -->
+            <div id="results" class="results hidden">
+                <div class="results-divider"><span>Results</span></div>
+
+                <div class="results-grid">
+                    <div class="results-row">
+                        <div class="result-card result-pips">
+                            <div class="result-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="result-label">SL Pip Distance</p>
+                                <p class="result-value" id="slPipDistance">0.0</p>
+                            </div>
+                        </div>
+                        <div class="result-card result-pips">
+                            <div class="result-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="18" y1="20" x2="18" y2="10"></line>
+                                    <line x1="12" y1="20" x2="12" y2="4"></line>
+                                    <line x1="6" y1="20" x2="6" y2="14"></line>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="result-label">TP Pip Distance</p>
+                                <p class="result-value" id="tpPipDistance">0.0</p>
+                            </div>
+                        </div>
+                        <div class="result-card result-rr">
+                            <div class="result-icon">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"></circle>
+                                    <path d="M16 12l-4-4-4 4"></path>
+                                    <path d="M12 16V8"></path>
+                                </svg>
+                            </div>
+                            <div>
+                                <p class="result-label">Risk : Reward</p>
+                                <p class="result-value" id="rrRatio">1:0.0</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="result-card result-risk">
+                        <div class="result-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path
+                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
+                                </path>
+                                <line x1="12" y1="9" x2="12" y2="13"></line>
+                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="result-label">Risk Amount</p>
+                            <p class="result-value" id="riskAmount">$0.00</p>
+                        </div>
+                    </div>
+
+                    <div class="result-card result-lot">
+                        <div class="result-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"></path>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="result-label">Recommended Lot Size</p>
+                            <p class="result-value" id="lotSize">0.00</p>
+                        </div>
+                    </div>
+
+                    <div class="result-card result-profit">
+                        <div class="result-icon">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"></polyline>
+                                <polyline points="17 6 23 6 23 12"></polyline>
+                            </svg>
+                        </div>
+                        <div>
+                            <p class="result-label">Potential Profit</p>
+                            <p class="result-value" id="potentialProfit">$0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Trade Summary -->
+                <div class="trade-summary" id="tradeSummary">
+                    <div class="results-divider"><span>Trade Summary</span></div>
+                    <table class="summary-table">
+                        <tbody>
+                            <tr>
+                                <td>Pair</td>
+                                <td id="sumPair">—</td>
+                            </tr>
+                            <tr>
+                                <td>Entry</td>
+                                <td id="sumEntry">—</td>
+                            </tr>
+                            <tr>
+                                <td>Stop Loss</td>
+                                <td id="sumSL">—</td>
+                            </tr>
+                            <tr>
+                                <td>Take Profit</td>
+                                <td id="sumTP">—</td>
+                            </tr>
+                            <tr>
+                                <td>Lot Size</td>
+                                <td id="sumLot">—</td>
+                            </tr>
+                            <tr>
+                                <td>Risk Amount</td>
+                                <td id="sumRisk">—</td>
+                            </tr>
+                            <tr>
+                                <td>Potential Profit</td>
+                                <td id="sumProfit">—</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <button type="button" id="copyBtn" class="btn-copy">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                        </svg>
+                        <span>Copy Trade Setup</span>
+                    </button>
+                </div>
+
+                <div class="risk-warning">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <div>
+                        <p>Always confirm lot size with your broker.</p>
+                        <p>This calculator provides estimates only.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>Use this tool for educational purposes only. Always manage your risk responsibly.</p>
+        </footer>
+    </div>
+
+    <script src="app.js?v=7"></script>
+</body>
+
+</html>
