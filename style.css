@@ -630,6 +630,113 @@ body {
   font-weight: 500;
 }
 
+/* ── CTA Section ─────────────────────────────────── */
+.cta-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  position: relative;
+  z-index: 1;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, .35);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .75rem;
+  overflow: hidden;
+}
+
+.cta-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--accent), #6366f1, transparent);
+}
+
+.cta-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, .12);
+  color: var(--accent);
+  margin-bottom: .25rem;
+}
+
+.cta-title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.02em;
+}
+
+.cta-description {
+  font-size: .82rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  max-width: 360px;
+}
+
+.cta-features {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: .6rem .75rem;
+  margin: .5rem 0;
+}
+
+.cta-features li {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--text);
+}
+
+.cta-features li svg {
+  color: var(--green);
+  flex-shrink: 0;
+}
+
+.btn-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  padding: .8rem 2rem;
+  font-family: inherit;
+  font-size: .95rem;
+  font-weight: 600;
+  color: #fff;
+  background: linear-gradient(135deg, var(--accent), #6366f1);
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform .15s, box-shadow .25s, filter .25s;
+  box-shadow: 0 4px 20px var(--accent-glow);
+  margin-top: .25rem;
+}
+
+.btn-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px var(--accent-glow);
+  filter: brightness(1.08);
+}
+
+.btn-cta:active {
+  transform: translateY(0);
+}
+
 /* ── Footer ───────────────────────────────────────── */
 .footer {
   text-align: center;
