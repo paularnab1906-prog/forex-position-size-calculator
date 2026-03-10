@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# reference to sitemap
+Sitemap: https://paularnab1906-prog.github.io/forex-position-size-calculator/sitemap.xml
